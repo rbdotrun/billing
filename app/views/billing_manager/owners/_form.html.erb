@@ -1,0 +1,5 @@
+<%= form_with(model: BillingManager::Owner.new, url: owner_path) do |form| %>
+  <%= form.text_field(:stripe_publishable_key, placeholder: "Publishable key") %>
+  <%= form.text_field(:stripe_secret_key, placeholder: "Secret key") %>
+  <%= form.submit("Save") %>
+<% end %>

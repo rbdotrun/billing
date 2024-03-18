@@ -4,12 +4,13 @@
 #
 #  id                       :uuid             not null, primary key
 #  label                    :string           not null
-#  price                    :float            not null
+#  price                    :float
 #  recurring                :boolean          default(FALSE), not null
 #  recurring_interval       :integer
 #  recurring_interval_count :integer
 #  stripe_data              :jsonb
-#  usage_type               :enum             default("licensed"), not null
+#  tiers_mode               :enum
+#  usage_type               :enum
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
 #  feature_id               :uuid
@@ -18,6 +19,7 @@
 # Indexes
 #
 #  index_billing_manager_prices_on_feature_id  (feature_id)
+#  index_billing_manager_prices_on_stripe_id   (stripe_id) UNIQUE
 #
 # Foreign Keys
 #
@@ -26,7 +28,9 @@
 module BillingManager
   class Price < ApplicationRecord
     belongs_to(:feature)
-    has_many(:subscription_items)
-    validates(:recurring, :recurring_interval, :recurring_interval_count, presence: true, if: -> { recurring })
+    has_many(:subscription_items, dependent: :destroy)
+    has_many(:price_tiers, dependent: :destroy)
+    validates(:recurring_interval, :recurring_interval_count, presence: true, if: -> { recurring })
+    validates(:price, presence: true, if: -> { tiers_mode.nil? })
   end
 end

@@ -2,7 +2,7 @@
 #
 # Table name: billing_manager_record_usages
 #
-#  id                   :bigint           not null, primary key
+#  id                   :uuid             not null, primary key
 #  stripe_data          :jsonb            not null
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null

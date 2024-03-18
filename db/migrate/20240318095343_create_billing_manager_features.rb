@@ -6,7 +6,10 @@ class CreateBillingManagerFeatures < ActiveRecord::Migration[7.1]
       t.text(:description)
       t.string(:stripe_id)
       t.jsonb(:stripe_data)
+      t.boolean(:active, default: false, null: false)
       t.timestamps
     end
+
+    add_index(:billing_manager_features, :stripe_id, unique: true)
   end
 end

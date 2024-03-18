@@ -6,5 +6,7 @@ class CreateBillingManagerCustomers < ActiveRecord::Migration[7.1]
       t.jsonb(:stripe_data)
       t.timestamps
     end
+
+    add_index(:billing_manager_customers, :stripe_id, unique: true)
   end
 end

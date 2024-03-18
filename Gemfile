@@ -15,6 +15,10 @@ group(:development) do
   gem("annotate", "~> 3.1")
 end
 
+group(:development, :test) do
+  gem("byebug")
+end
+
 group(:test) do
   gem("bullet", "~> 7.1")
   gem("capybara")

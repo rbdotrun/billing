@@ -3,6 +3,7 @@
 # Table name: billing_manager_subscriptions
 #
 #  id          :uuid             not null, primary key
+#  status      :string           not null
 #  stripe_data :jsonb
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
@@ -12,6 +13,7 @@
 # Indexes
 #
 #  index_billing_manager_subscriptions_on_customer_id  (customer_id)
+#  index_billing_manager_subscriptions_on_stripe_id    (stripe_id) UNIQUE
 #
 # Foreign Keys
 #
@@ -20,6 +22,6 @@
 module BillingManager
   class Subscription < ApplicationRecord
     belongs_to(:customer)
-    has_many(:subscription_items)
+    has_many(:subscription_items, dependent: :destroy)
   end
 end

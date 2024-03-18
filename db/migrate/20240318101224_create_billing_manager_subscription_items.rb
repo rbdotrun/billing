@@ -4,9 +4,12 @@ class CreateBillingManagerSubscriptionItems < ActiveRecord::Migration[7.1]
       t.references(:subscription, index: true, foreign_key: { to_table: :billing_manager_subscriptions }, type: :uuid)
       t.references(:price, index: true, foreign_key: { to_table: :billing_manager_prices }, type: :uuid)
       t.integer(:quantity, default: 1, null: false)
+      t.string(:stripe_id)
+      t.jsonb(:stripe_data)
       t.timestamps
     end
 
     add_index(:billing_manager_subscription_items, %i[subscription_id price_id], unique: true, name: :unique_price_feature)
+    add_index(:billing_manager_subscription_items, :stripe_id, unique: true)
   end
 end

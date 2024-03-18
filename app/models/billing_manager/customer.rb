@@ -11,7 +11,8 @@
 #
 # Indexes
 #
-#  index_billing_manager_customers_on_owner_id  (owner_id)
+#  index_billing_manager_customers_on_owner_id   (owner_id)
+#  index_billing_manager_customers_on_stripe_id  (stripe_id) UNIQUE
 #
 # Foreign Keys
 #
@@ -20,6 +21,6 @@
 module BillingManager
   class Customer < ApplicationRecord
     belongs_to(:owner)
-    has_many(:subscriptions)
+    has_many(:subscriptions, dependent: :destroy)
   end
 end

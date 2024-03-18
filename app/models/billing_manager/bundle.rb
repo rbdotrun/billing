@@ -19,7 +19,7 @@
 module BillingManager
   class Bundle < ApplicationRecord
     belongs_to(:owner)
-    has_many(:bundle_items)
+    has_many(:bundle_items, dependent: :destroy)
     has_one_attached(:visual)
     validates(:label, presence: true)
   end
