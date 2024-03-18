@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_18_150906) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_18_162944) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -97,6 +97,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_18_150906) do
     t.check_constraint "price IS NOT NULL OR tiers_mode IS NOT NULL", name: "price_presence_constraint"
   end
 
+  create_table "billing_manager_receipts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "subscription_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["subscription_id"], name: "index_billing_manager_receipts_on_subscription_id"
+  end
+
   create_table "billing_manager_record_usages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "subscription_item_id"
     t.string "stripe_id", null: false
@@ -143,6 +150,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_18_150906) do
   add_foreign_key "billing_manager_features", "billing_manager_owners", column: "owner_id"
   add_foreign_key "billing_manager_price_tiers", "billing_manager_prices", column: "price_id"
   add_foreign_key "billing_manager_prices", "billing_manager_features", column: "feature_id"
+  add_foreign_key "billing_manager_receipts", "billing_manager_receipts", column: "subscription_id"
   add_foreign_key "billing_manager_record_usages", "billing_manager_subscription_items", column: "subscription_item_id"
   add_foreign_key "billing_manager_subscription_items", "billing_manager_prices", column: "price_id"
   add_foreign_key "billing_manager_subscription_items", "billing_manager_subscriptions", column: "subscription_id"

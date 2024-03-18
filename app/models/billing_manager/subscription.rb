@@ -23,5 +23,6 @@ module BillingManager
   class Subscription < ApplicationRecord
     belongs_to(:customer)
     has_many(:subscription_items, dependent: :destroy)
+    has_many(:receipts, dependent: :destroy)
   end
 end

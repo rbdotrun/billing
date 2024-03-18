@@ -18,30 +18,30 @@ module BillingManager::External
         price = BillingManager::Price.find_by(stripe_id: remote_price.id)
 
         remote_price.tiers.flat_map do |tier|
-          { price_id: price.id, flat_amount: tier.flat_amount, unit_amount: tier.unit_amount, up_to: tier.up_to }
+          {
+            price_id: price.id,
+            flat_amount: tier.flat_amount,
+            unit_amount: tier.unit_amount,
+            up_to: tier.up_to
+          }
         end
       end.compact
 
       BillingManager::PriceTier.upsert_all(tiers_dataset, unique_by: %w[price_id flat_amount unit_amount up_to])
 
-      if data.has_more
-        import(owner, starting_after: data.data.last.id, active:)
-      end
+      import(owner, starting_after: data.data.last.id, active:) if data.has_more
     end
 
     def self.format_price(remote_price)
       feature = BillingManager::Feature.find_by(stripe_id: remote_price.product)
 
       {
-        feature_id: feature.id,
-        stripe_id: remote_price.id,
-        price: remote_price.unit_amount,
-        recurring: !!remote_price.recurring,
+        feature_id: feature.id, stripe_id: remote_price.id,
+        price: remote_price.unit_amount, recurring: !!remote_price.recurring,
         recurring_interval: remote_price.recurring&.interval,
         recurring_interval_count: remote_price.recurring&.interval_count,
         usage_type: remote_price.recurring&.usage_type,
-        tiers_mode: remote_price.tiers_mode,
-        stripe_data: remote_price,
+        tiers_mode: remote_price.tiers_mode, stripe_data: remote_price,
         label: remote_price.nickname || "undefined"
       }
     end
